@@ -1,0 +1,3 @@
+/home/lucian/frozesh/build/CMakeFiles/frozesh.dir
+/home/lucian/frozesh/build/CMakeFiles/edit_cache.dir
+/home/lucian/frozesh/build/CMakeFiles/rebuild_cache.dir
