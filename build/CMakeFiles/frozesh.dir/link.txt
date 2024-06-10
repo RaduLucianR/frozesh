@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/frozesh.dir/src/main.c.o -o frozesh 
