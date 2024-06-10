@@ -13,19 +13,72 @@ void print_prompt2(void)
     fprintf(stderr, "> ");
 } 
 
-char * read_command()
+/**
+ * @brief Read a command of arbitrary length in chunks of 1024 bytes.
+*/
+char * read_command(void)
 {
-    char buffer[1024];
-    fgets(buffer, 1024, stdin);
+    char chunk[1024];
+    char * command;
+    int command_length;
 
-    return buffer;
+    command = NULL;
+    command_length = 0;
+
+    while(fgets(chunk, 1024, stdin))
+    {
+        int chunk_length;
+        
+        chunk_length = strlen(chunk);
+
+        if(! command)
+        {
+            // If command doesn't exist yet, then give memory with malloc
+            command = malloc(chunk_length + 1);
+        } 
+        else 
+        {
+            // If command exists, then ellongate command with realloc
+            char * longer_command;
+
+            longer_command = NULL;
+            longer_command = realloc(command, command_length + chunk_length + 1);
+
+            if (longer_command)
+            {
+                command = longer_command;
+            }
+            else
+            {
+                free(command);
+                command = NULL;
+            }
+        }
+
+        if(! command)
+        {
+            fprintf(stderr, "Error: failed to allocate memory to command: %s\n", strerror(errno));
+        }
+
+        strcpy(command + command_length, chunk);
+
+        if(chunk[chunk_length - 1] == '\n')
+        {
+            // If users pressed ENTER then return command
+            return command;
+        }
+
+        command_length += chunk_length;
+    }
+
+    return command;
 }
 
 int main(int argc, char **argv)
 {
     char * cmd;
 
-    do
+    while(1)
     {
         print_prompt1();
         cmd = read_command();
@@ -50,9 +103,9 @@ int main(int argc, char **argv)
             break;
         }
 
-        printf("%s", cmd); // Place holder. Print back the introduced command.
+        printf("%s", cmd); // Placeholder. Print back the introduced command.
         free(cmd);
-    } while (1);
+    }
 
     exit(EXIT_SUCCESS);
 }
