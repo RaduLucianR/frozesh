@@ -11,3 +11,4 @@ Feature list
       - [ ] cd
       - [ ] pwd
 - [ ] Command history
+- [ ] Install script that makes it available to be called in bash
