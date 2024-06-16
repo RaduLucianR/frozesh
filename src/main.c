@@ -142,12 +142,6 @@ int main(int argc, char **argv)
 
         char ** tokens;
         tokens = tokenizer(cmd);
-
-        for (int i = 0; i < 2; i ++)
-        {
-            char * token = tokens[i];
-            printf("%s\n", token);
-        }
         
         // Placeholder. Print back the introduced command.
         // printf("%s", cmd);
