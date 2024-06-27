@@ -3,6 +3,14 @@
 #include <errno.h>
 #include <string.h>
 
+#define MAX_NROF_TOKENS 50
+
+struct TreeNode {
+    char * token;
+    struct TreeNode * children;
+};
+
+
 void print_prompt1()
 {
     fprintf(stderr, "frozesh> ");
@@ -18,16 +26,20 @@ void print_prompt2(void)
 */
 char * read_command(void)
 {
+    // Local variable declaration
     char chunk[1024];
     char * command;
     int command_length;
 
+    // Local variable initialization
     command = NULL;
     command_length = 0;
+    memset(chunk, 0, sizeof(chunk));
 
+    // Logic
     while(fgets(chunk, 1024, stdin))
     {
-        int chunk_length;
+        int chunk_length = 0;
         
         chunk_length = strlen(chunk);
 
@@ -35,12 +47,16 @@ char * read_command(void)
         {
             // If command doesn't exist yet, then give memory with malloc
             command = malloc(chunk_length + 1);
+
+            if (!command) {
+                fprintf(stderr, "Error: malloc failed %s\n", strerror(errno));
+                return NULL;
+            }
         } 
         else 
         {
             // If command exists, then ellongate command with realloc
             char * longer_command;
-
             longer_command = NULL;
             longer_command = realloc(command, command_length + chunk_length + 1);
 
@@ -51,7 +67,7 @@ char * read_command(void)
             else
             {
                 free(command);
-                command = NULL;
+                return NULL;
             }
         }
 
@@ -85,15 +101,23 @@ char * read_command(void)
 
 char ** tokenizer(char * cmd)
 {
+    // Local variable declaration
     char ** tokens;
     char * token;
     const char * delimiters;
     unsigned int count;
 
-    tokens = malloc(sizeof(cmd));
+    // Local variable initialization
+    tokens = malloc(sizeof(char *) * MAX_NROF_TOKENS);
+    token = NULL;
     delimiters = " \n\\";
     count = 0;
 
+    for (int i = 0; i < MAX_NROF_TOKENS; i++) {
+        tokens[i] = NULL;
+    }
+
+    // Logic
     token = strtok(cmd, delimiters);
 
     if(token == NULL)
@@ -103,7 +127,9 @@ char ** tokenizer(char * cmd)
 
     do
     {
-        tokens[count] = token;
+        tokens[count] = malloc(strlen(token) + 1);
+        //tokens[count] = token; -> this will still point to the location in char * cmd!
+        strcpy(tokens[count], token); // while strcpy makes a new memory location
         token = strtok(NULL, delimiters);
         count += 1;
     } while (token != NULL);
@@ -114,6 +140,7 @@ char ** tokenizer(char * cmd)
 int main(int argc, char **argv)
 {
     char * cmd;
+    cmd = NULL;
 
     while(1)
     {
@@ -142,6 +169,13 @@ int main(int argc, char **argv)
 
         char ** tokens;
         tokens = tokenizer(cmd);
+
+        for(int i = 0; tokens[i] != NULL; i ++)
+        {
+            free(tokens[i]);
+        }
+
+        free(tokens);
         
         // Placeholder. Print back the introduced command.
         // printf("%s", cmd);
