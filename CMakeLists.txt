@@ -17,8 +17,7 @@ include_directories(include)
 
 add_executable(frozesh
                src/main.c
-               )
-
-add_executable(test
-               src/aa.c            
+               src/reader.c
+               src/tokenizer.c
+               src/parser.c
                )
