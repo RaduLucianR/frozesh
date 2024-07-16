@@ -6,6 +6,7 @@
 #include "reader.h"
 #include "tokenizer.h"
 #include "parser.h"
+#include "executor.h"
 
 int main(int argc, char **argv)
 {
@@ -58,6 +59,7 @@ int main(int argc, char **argv)
         // printf("%s", cmd);
 
         free(cmd); // Command was used, hence free
+        search_path(NULL);
     }
 
     exit(EXIT_SUCCESS);

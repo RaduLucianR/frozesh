@@ -20,4 +20,5 @@ add_executable(frozesh
                src/reader.c
                src/tokenizer.c
                src/parser.c
+               src/executor.c
                )

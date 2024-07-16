@@ -80,7 +80,8 @@ struct TreeNode * parser(char ** tokens)
             if(cmd->children != NULL)
             {
                 for(arg_index = 0; cmd->children[arg_index] != NULL; arg_index ++) {}
-                cmd->children = realloc(cmd->children, sizeof(struct TreeNode) * arg_index); // implement realloc with in-between value
+
+                cmd->children = realloc(cmd->children, sizeof(struct TreeNode) * arg_index); // TODO: implement realloc with in-between value
             } else {
                 cmd->children = malloc(sizeof(struct TreeNode));
             }
